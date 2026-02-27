@@ -22,6 +22,11 @@ class MyStandardDeviceTest {
     }
 
     @Test
+    void testDeviceIsInitiallyOff() {
+        assertFalse(device.isOn());
+    }
+
+    @Test
     void testCanBeSwitchedOn() {
         when(stubFailingPolicy.attemptOn()).thenReturn(true);
         device.on();
@@ -41,6 +46,7 @@ class MyStandardDeviceTest {
     void testDeviceException() {
         when(stubFailingPolicy.attemptOn()).thenReturn(false);
         assertThrows(IllegalStateException.class, device::on);
+        assertFalse(device.isOn()); // Ensure state hasn't changed
     }
 
     @Test
@@ -60,5 +66,11 @@ class MyStandardDeviceTest {
 
         verify(stubFailingPolicy).reset();
         verify(stubFailingPolicy).attemptOn();
+    }
+
+    @Test
+    void testToString() {
+        when(stubFailingPolicy.policyName()).thenReturn("stubbed_policy");
+        assertEquals("StandardDevice{policy=stubbed_policy, on=false}", device.toString());
     }
 }

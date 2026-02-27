@@ -22,14 +22,16 @@ class MyFailingPolicyTest {
     }
 
     @Test
-    void testFailsOnFirstAttemptWhenPolicyDictatesFailure() {
-        FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true));
-        assertFalse(failingPolicy.attemptOn());
+    void testSuccessOnFirstAttempt() {
+        FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(false));
+        assertTrue(failingPolicy.attemptOn());
     }
 
     @Test
-    void testMaintainsFailureStateWithoutReset() {
-        FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true, false, false));
+    void testStateTransitions() {
+        FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(false, false, true, false));
+        assertTrue(failingPolicy.attemptOn());
+        assertTrue(failingPolicy.attemptOn());
         assertFalse(failingPolicy.attemptOn());
         assertFalse(failingPolicy.attemptOn());
     }
@@ -40,6 +42,12 @@ class MyFailingPolicyTest {
         assertFalse(failingPolicy.attemptOn());
         failingPolicy.reset();
         assertTrue(failingPolicy.attemptOn());
+    }
+
+    @Test
+    void testPolicyName() {
+        FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true));
+        assertEquals("GenericFailingPolicy", failingPolicy.policyName());
     }
 
 }

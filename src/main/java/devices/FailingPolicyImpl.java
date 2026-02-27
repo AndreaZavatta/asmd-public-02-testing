@@ -33,6 +33,6 @@ public class FailingPolicyImpl implements FailingPolicy {
 
     @Override
     public String policyName() {
-        return "random";
+        return "GenericFailingPolicy";
     }
 }
