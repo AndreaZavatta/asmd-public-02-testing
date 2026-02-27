@@ -94,7 +94,7 @@ public class StandardDeviceTest {
         @BeforeEach
         void init(){
             // the spy is essentially a proxy to the DOC, used to capture events
-            this.spyFailingPolicy = spy(new RandomFailing());
+            this.spyFailingPolicy = spy(new FailingPolicyImpl());
             device = new StandardDevice(this.spyFailingPolicy);
         }
 
