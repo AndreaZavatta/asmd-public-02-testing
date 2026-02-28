@@ -38,37 +38,45 @@ class StandardDeviceGUITest {
 
     @Test
     void givenNewGUI_whenInspected_thenHasCorrectTitleAndComponents() {
-        assertEquals("StandardDevice Controller (MVC)", gui.getTitle());
-        assertEquals(JFrame.EXIT_ON_CLOSE, gui.getDefaultCloseOperation());
+        assertAll("GUI Frame Properties",
+            () -> assertEquals("StandardDevice Controller (MVC)", gui.getTitle()),
+            () -> assertEquals(JFrame.EXIT_ON_CLOSE, gui.getDefaultCloseOperation())
+        );
 
         Component[] components = gui.getContentPane().getComponents();
         assertEquals(4, components.length, "GUI should have exactly 4 main components");
 
         JLabel statusLabel = (JLabel) findComponentByName(gui, "statusLabel");
-        assertNotNull(statusLabel, "statusLabel should exist");
-        assertEquals("Device Status: OFF", statusLabel.getText());
-        assertEquals(SwingConstants.CENTER, statusLabel.getHorizontalAlignment());
-
         JButton onButton = (JButton) findComponentByName(gui, "onButton");
-        assertNotNull(onButton, "onButton should exist");
-        assertEquals("Turn ON", onButton.getText());
-
         JButton offButton = (JButton) findComponentByName(gui, "offButton");
-        assertNotNull(offButton, "offButton should exist");
-        assertEquals("Turn OFF", offButton.getText());
-
         JButton resetButton = (JButton) findComponentByName(gui, "resetButton");
-        assertNotNull(resetButton, "resetButton should exist");
-        assertEquals("Reset Device", resetButton.getText());
+
+        assertAll("GUI Component Presence and Text",
+            () -> assertNotNull(statusLabel, "statusLabel should exist"),
+            () -> assertEquals("Device Status: OFF", statusLabel.getText()),
+            () -> assertEquals(SwingConstants.CENTER, statusLabel.getHorizontalAlignment()),
+
+            () -> assertNotNull(onButton, "onButton should exist"),
+            () -> assertEquals("Turn ON", onButton.getText()),
+
+            () -> assertNotNull(offButton, "offButton should exist"),
+            () -> assertEquals("Turn OFF", offButton.getText()),
+
+            () -> assertNotNull(resetButton, "resetButton should exist"),
+            () -> assertEquals("Reset Device", resetButton.getText())
+        );
     }
 
     @Test
     void givenGUI_whenUpdateStatusLabelCalled_thenLabelUpdatesTextAndColor() {
         gui.updateStatusLabel("TESTING_STATE", Color.BLUE);
         JLabel statusLabel = (JLabel) findComponentByName(gui, "statusLabel");
-        assertNotNull(statusLabel);
-        assertEquals("Device Status: TESTING_STATE", statusLabel.getText());
-        assertEquals(Color.BLUE, statusLabel.getForeground());
+        
+        assertAll("Status Label Updates",
+            () -> assertNotNull(statusLabel),
+            () -> assertEquals("Device Status: TESTING_STATE", statusLabel.getText()),
+            () -> assertEquals(Color.BLUE, statusLabel.getForeground())
+        );
     }
 
     @Test

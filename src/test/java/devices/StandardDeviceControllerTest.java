@@ -39,6 +39,10 @@ class StandardDeviceControllerTest {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
         verify(mockView).updateStatusLabel("ON", Color.GREEN);
+        
+        // Constructor calls model.isOn(), acknowledge it before closing verifying
+        verify(mockModel, atLeastOnce()).isOn();
+        verifyNoMoreInteractions(mockModel);
     }
 
     @Test
@@ -63,6 +67,8 @@ class StandardDeviceControllerTest {
         onListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).on();
         verify(mockView).updateStatusLabel("FAILED (Exception)", Color.RED);
+        verify(mockModel, atLeastOnce()).isOn();
+        verifyNoMoreInteractions(mockModel);
     }
 
     @Test
@@ -75,6 +81,8 @@ class StandardDeviceControllerTest {
         verify(mockModel).off();
         verify(mockView, times(1)).updateStatusLabel("OFF", Color.BLACK); 
         verify(mockView).updateStatusLabel("OFF", Color.BLACK);
+        verify(mockModel, atLeastOnce()).isOn();
+        verifyNoMoreInteractions(mockModel);
     }
 
     @Test
@@ -86,5 +94,7 @@ class StandardDeviceControllerTest {
         resetListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).reset();
         verify(mockView).updateStatusLabel("OFF (Reset)", Color.BLACK);
+        verify(mockModel, atLeastOnce()).isOn();
+        verifyNoMoreInteractions(mockModel);
     }
 }
