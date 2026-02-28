@@ -9,26 +9,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class MyFailingPolicyTest {
 
     @Test
-    void testEmptyStream() {
+    void givenEmptyStream_whenAttemptOn_thenThrowsIllegalStateException() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.empty());
         assertThrows(IllegalStateException.class, failingPolicy::attemptOn);
     }
 
     @Test
-    void testStreamExhaustion() {
+    void givenExhaustedStream_whenAttemptOn_thenThrowsIllegalStateException() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true));
         failingPolicy.attemptOn();
         assertThrows(IllegalStateException.class, failingPolicy::attemptOn);
     }
 
     @Test
-    void testSuccessOnFirstAttempt() {
+    void givenStreamWithFalse_whenAttemptOn_thenReturnsTrue() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(false));
         assertTrue(failingPolicy.attemptOn());
     }
 
     @Test
-    void testStateTransitions() {
+    void givenMixedStream_whenAttemptOnMultipleTimes_thenReturnsExpectedResults() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(false, false, true, false));
         assertTrue(failingPolicy.attemptOn());
         assertTrue(failingPolicy.attemptOn());
@@ -37,7 +37,7 @@ class MyFailingPolicyTest {
     }
 
     @Test
-    void testResetClearsFailureState() {
+    void givenFailedState_whenReset_thenFailureStateIsCleared() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true, false, false));
         assertFalse(failingPolicy.attemptOn());
         failingPolicy.reset();
@@ -45,7 +45,7 @@ class MyFailingPolicyTest {
     }
 
     @Test
-    void testPolicyName() {
+    void givenInitializedPolicy_whenGetPolicyName_thenReturnsGenericFailingPolicy() {
         FailingPolicy failingPolicy = new FailingPolicyImpl(Stream.of(true));
         assertEquals("GenericFailingPolicy", failingPolicy.policyName());
     }

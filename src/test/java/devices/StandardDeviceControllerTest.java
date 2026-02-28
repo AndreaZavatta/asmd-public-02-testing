@@ -24,21 +24,21 @@ class StandardDeviceControllerTest {
     }
 
     @Test
-    void testInitialViewUpdateWhenDeviceIsOff() {
+    void givenDeviceIsOff_whenControllerInitialized_thenViewDisplaysOff() {
         when(mockModel.isOn()).thenReturn(false);
         controller = new StandardDeviceController(mockModel, mockView);
         verify(mockView).updateStatusLabel("OFF", Color.BLACK);
     }
 
     @Test
-    void testInitialViewUpdateWhenDeviceIsOn() {
+    void givenDeviceIsOn_whenControllerInitialized_thenViewDisplaysOn() {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
         verify(mockView).updateStatusLabel("ON", Color.GREEN);
     }
 
     @Test
-    void testTurnOnButtonSuccess() {
+    void givenDeviceIsOff_whenTurnOnClicked_thenModelTurnsOnAndViewDisplaysOn() {
         when(mockModel.isOn()).thenReturn(false);
         controller = new StandardDeviceController(mockModel, mockView);
         ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
@@ -51,7 +51,7 @@ class StandardDeviceControllerTest {
     }
 
     @Test
-    void testTurnOnButtonFailure() {
+    void givenDeviceIsOff_whenTurnOnThrowsException_thenViewDisplaysError() {
         when(mockModel.isOn()).thenReturn(false);
         controller = new StandardDeviceController(mockModel, mockView);
         doThrow(new IllegalStateException()).when(mockModel).on();
@@ -64,7 +64,7 @@ class StandardDeviceControllerTest {
     }
 
     @Test
-    void testTurnOffButton() {
+    void givenDeviceIsOn_whenTurnOffClicked_thenModelTurnsOffAndViewDisplaysOff() {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
         ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
@@ -77,7 +77,7 @@ class StandardDeviceControllerTest {
     }
 
     @Test
-    void testResetButton() {
+    void givenDeviceIsOn_whenResetClicked_thenModelResetsAndViewDisplaysOffReset() {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
         ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);

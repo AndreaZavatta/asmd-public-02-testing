@@ -17,24 +17,24 @@ class MyStandardDeviceTest {
     }
 
     @Test
-    void constructorThrowsOnNullPolicy() {
+    void givenNullPolicy_whenConstructed_thenThrowsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new StandardDevice(null));
     }
 
     @Test
-    void testDeviceIsInitiallyOff() {
+    void givenNewDevice_whenChecked_thenDeviceIsOff() {
         assertFalse(device.isOn());
     }
 
     @Test
-    void testCanBeSwitchedOn() {
+    void givenPolicySucceeds_whenTurnOn_thenDeviceIsOn() {
         when(stubFailingPolicy.attemptOn()).thenReturn(true);
         device.on();
         assertTrue(device.isOn());
     }
 
     @Test
-    void testCanBeSwitchedOff() {
+    void givenDeviceIsOn_whenTurnOff_thenDeviceIsOff() {
         when(stubFailingPolicy.attemptOn()).thenReturn(true);
         device.on();
         assertTrue(device.isOn());
@@ -43,14 +43,14 @@ class MyStandardDeviceTest {
     }
 
     @Test
-    void testDeviceException() {
+    void givenPolicyFails_whenTurnOn_thenThrowsIllegalStateExceptionAndRemainsOff() {
         when(stubFailingPolicy.attemptOn()).thenReturn(false);
         assertThrows(IllegalStateException.class, device::on);
         assertFalse(device.isOn()); // Ensure state hasn't changed
     }
 
     @Test
-    void testDeviceReset(){
+    void givenDeviceIsOn_whenReset_thenDeviceIsOff() {
         when(stubFailingPolicy.attemptOn()).thenReturn(true);
         device.on();
         device.reset();
@@ -58,7 +58,7 @@ class MyStandardDeviceTest {
     }
 
     @Test
-    void testResetInteraction() {
+    void givenDeviceIsOn_whenReset_thenPolicyIsReset() {
         when(stubFailingPolicy.attemptOn()).thenReturn(true);
 
         device.on();
@@ -69,7 +69,7 @@ class MyStandardDeviceTest {
     }
 
     @Test
-    void testToString() {
+    void givenMockedPolicy_whenToString_thenReturnsFormattedString() {
         when(stubFailingPolicy.policyName()).thenReturn("stubbed_policy");
         assertEquals("StandardDevice{policy=stubbed_policy, on=false}", device.toString());
     }
