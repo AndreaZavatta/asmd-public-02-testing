@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class StandardDeviceGUITest {
 
@@ -73,29 +75,35 @@ class StandardDeviceGUITest {
     void givenGUI_whenOnButtonClicked_thenRegisteredListenerIsFired() {
         JButton onButton = (JButton) findComponentByName(gui, "onButton");
         assertNotNull(onButton);
-        AtomicBoolean clicked = new AtomicBoolean(false);
-        gui.addOnButtonListener(e -> clicked.set(true));
+        
+        ActionListener mockListener = mock(ActionListener.class);
+        gui.addOnButtonListener(mockListener);
         onButton.doClick();
-        assertTrue(clicked.get(), "The ON button listener should have been triggered");
+        
+        verify(mockListener, times(1)).actionPerformed(any(ActionEvent.class));
     }
 
     @Test
     void givenGUI_whenOffButtonClicked_thenRegisteredListenerIsFired() {
         JButton offButton = (JButton) findComponentByName(gui, "offButton");
         assertNotNull(offButton);
-        AtomicBoolean clicked = new AtomicBoolean(false);
-        gui.addOffButtonListener(e -> clicked.set(true));
+        
+        ActionListener mockListener = mock(ActionListener.class);
+        gui.addOffButtonListener(mockListener);
         offButton.doClick();
-        assertTrue(clicked.get(), "The OFF button listener should have been triggered");
+        
+        verify(mockListener, times(1)).actionPerformed(any(ActionEvent.class));
     }
 
     @Test
     void givenGUI_whenResetButtonClicked_thenRegisteredListenerIsFired() {
         JButton resetButton = (JButton) findComponentByName(gui, "resetButton");
         assertNotNull(resetButton);
-        AtomicBoolean clicked = new AtomicBoolean(false);
-        gui.addResetButtonListener(e -> clicked.set(true));
+        
+        ActionListener mockListener = mock(ActionListener.class);
+        gui.addResetButtonListener(mockListener);
         resetButton.doClick();
-        assertTrue(clicked.get(), "The RESET button listener should have been triggered");
+        
+        verify(mockListener, times(1)).actionPerformed(any(ActionEvent.class));
     }
 }

@@ -3,6 +3,8 @@ package devices;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -16,9 +18,11 @@ class StandardDeviceControllerTest {
     private Device mockModel;
     private DeviceView mockView;
     private StandardDeviceController controller;
+    @Captor private ArgumentCaptor<ActionListener> actionListenerCaptor;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         mockModel = mock(Device.class);
         mockView = mock(DeviceView.class);
     }
@@ -41,9 +45,8 @@ class StandardDeviceControllerTest {
     void givenDeviceIsOff_whenTurnOnClicked_thenModelTurnsOnAndViewDisplaysOn() {
         when(mockModel.isOn()).thenReturn(false);
         controller = new StandardDeviceController(mockModel, mockView);
-        ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
-        verify(mockView).addOnButtonListener(captor.capture());
-        ActionListener onListener = captor.getValue();
+        verify(mockView).addOnButtonListener(actionListenerCaptor.capture());
+        ActionListener onListener = actionListenerCaptor.getValue();
 
         onListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).on();
@@ -55,9 +58,8 @@ class StandardDeviceControllerTest {
         when(mockModel.isOn()).thenReturn(false);
         controller = new StandardDeviceController(mockModel, mockView);
         doThrow(new IllegalStateException()).when(mockModel).on();
-        ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
-        verify(mockView).addOnButtonListener(captor.capture());
-        ActionListener onListener = captor.getValue();
+        verify(mockView).addOnButtonListener(actionListenerCaptor.capture());
+        ActionListener onListener = actionListenerCaptor.getValue();
         onListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).on();
         verify(mockView).updateStatusLabel("FAILED (Exception)", Color.RED);
@@ -67,9 +69,8 @@ class StandardDeviceControllerTest {
     void givenDeviceIsOn_whenTurnOffClicked_thenModelTurnsOffAndViewDisplaysOff() {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
-        ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
-        verify(mockView).addOffButtonListener(captor.capture());
-        ActionListener offListener = captor.getValue();
+        verify(mockView).addOffButtonListener(actionListenerCaptor.capture());
+        ActionListener offListener = actionListenerCaptor.getValue();
         offListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).off();
         verify(mockView, times(1)).updateStatusLabel("OFF", Color.BLACK); 
@@ -80,9 +81,8 @@ class StandardDeviceControllerTest {
     void givenDeviceIsOn_whenResetClicked_thenModelResetsAndViewDisplaysOffReset() {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
-        ArgumentCaptor<ActionListener> captor = ArgumentCaptor.forClass(ActionListener.class);
-        verify(mockView).addResetButtonListener(captor.capture());
-        ActionListener resetListener = captor.getValue();
+        verify(mockView).addResetButtonListener(actionListenerCaptor.capture());
+        ActionListener resetListener = actionListenerCaptor.getValue();
         resetListener.actionPerformed(mock(ActionEvent.class));
         verify(mockModel).reset();
         verify(mockView).updateStatusLabel("OFF (Reset)", Color.BLACK);
