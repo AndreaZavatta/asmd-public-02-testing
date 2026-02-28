@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MyIntegrationTest {
+class StandardDeviceIntegrationTest {
 
     @Test
     void givenNewDeviceWithEmptyPolicy_whenChecked_thenDeviceIsOff() {

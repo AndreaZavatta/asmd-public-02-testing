@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MyFailingPolicyTest {
+class FailingPolicyTest {
 
     @Test
     void givenEmptyStream_whenAttemptOn_thenThrowsIllegalStateException() {
