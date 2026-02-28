@@ -13,6 +13,22 @@ class StandardDeviceGUITest {
 
     private StandardDeviceGUI gui;
 
+    // Helper method to find a component by name recursively
+    private Component findComponentByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (name.equals(component.getName())) {
+                return component;
+            }
+            if (component instanceof Container) {
+                Component found = findComponentByName((Container) component, name);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     @BeforeEach
     void setUp() {
         gui = new StandardDeviceGUI();
@@ -22,30 +38,41 @@ class StandardDeviceGUITest {
     void givenNewGUI_whenInspected_thenHasCorrectTitleAndComponents() {
         assertEquals("StandardDevice Controller (MVC)", gui.getTitle());
         assertEquals(JFrame.EXIT_ON_CLOSE, gui.getDefaultCloseOperation());
+
         Component[] components = gui.getContentPane().getComponents();
         assertEquals(4, components.length, "GUI should have exactly 4 main components");
-        JLabel statusLabel = (JLabel) components[0];
+
+        JLabel statusLabel = (JLabel) findComponentByName(gui, "statusLabel");
+        assertNotNull(statusLabel, "statusLabel should exist");
         assertEquals("Device Status: OFF", statusLabel.getText());
         assertEquals(SwingConstants.CENTER, statusLabel.getHorizontalAlignment());
-        JButton onButton = (JButton) components[1];
+
+        JButton onButton = (JButton) findComponentByName(gui, "onButton");
+        assertNotNull(onButton, "onButton should exist");
         assertEquals("Turn ON", onButton.getText());
-        JButton offButton = (JButton) components[2];
+
+        JButton offButton = (JButton) findComponentByName(gui, "offButton");
+        assertNotNull(offButton, "offButton should exist");
         assertEquals("Turn OFF", offButton.getText());
-        JButton resetButton = (JButton) components[3];
+
+        JButton resetButton = (JButton) findComponentByName(gui, "resetButton");
+        assertNotNull(resetButton, "resetButton should exist");
         assertEquals("Reset Device", resetButton.getText());
     }
 
     @Test
     void givenGUI_whenUpdateStatusLabelCalled_thenLabelUpdatesTextAndColor() {
         gui.updateStatusLabel("TESTING_STATE", Color.BLUE);
-        JLabel statusLabel = (JLabel) gui.getContentPane().getComponent(0);
+        JLabel statusLabel = (JLabel) findComponentByName(gui, "statusLabel");
+        assertNotNull(statusLabel);
         assertEquals("Device Status: TESTING_STATE", statusLabel.getText());
         assertEquals(Color.BLUE, statusLabel.getForeground());
     }
 
     @Test
     void givenGUI_whenOnButtonClicked_thenRegisteredListenerIsFired() {
-        JButton onButton = (JButton) gui.getContentPane().getComponent(1);
+        JButton onButton = (JButton) findComponentByName(gui, "onButton");
+        assertNotNull(onButton);
         AtomicBoolean clicked = new AtomicBoolean(false);
         gui.addOnButtonListener(e -> clicked.set(true));
         onButton.doClick();
@@ -54,7 +81,8 @@ class StandardDeviceGUITest {
 
     @Test
     void givenGUI_whenOffButtonClicked_thenRegisteredListenerIsFired() {
-        JButton offButton = (JButton) gui.getContentPane().getComponent(2);
+        JButton offButton = (JButton) findComponentByName(gui, "offButton");
+        assertNotNull(offButton);
         AtomicBoolean clicked = new AtomicBoolean(false);
         gui.addOffButtonListener(e -> clicked.set(true));
         offButton.doClick();
@@ -63,7 +91,8 @@ class StandardDeviceGUITest {
 
     @Test
     void givenGUI_whenResetButtonClicked_thenRegisteredListenerIsFired() {
-        JButton resetButton = (JButton) gui.getContentPane().getComponent(3);
+        JButton resetButton = (JButton) findComponentByName(gui, "resetButton");
+        assertNotNull(resetButton);
         AtomicBoolean clicked = new AtomicBoolean(false);
         gui.addResetButtonListener(e -> clicked.set(true));
         resetButton.doClick();

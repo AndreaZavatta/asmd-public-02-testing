@@ -19,17 +19,21 @@ public class StandardDeviceGUI extends JFrame implements DeviceView {
         this.setLayout(new GridLayout(4, 1, 10, 10));
 
         this.statusLabel = new JLabel("Device Status: OFF", SwingConstants.CENTER);
+        this.statusLabel.setName("statusLabel");
         this.statusLabel.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(this.statusLabel);
 
         this.onButton = new JButton("Turn ON");
+        this.onButton.setName("onButton");
         this.add(this.onButton);
 
         this.offButton = new JButton("Turn OFF");
+        this.offButton.setName("offButton");
         this.add(this.offButton);
 
         // RESET Button
         this.resetButton = new JButton("Reset Device");
+        this.resetButton.setName("resetButton");
         this.add(this.resetButton);
 
         // Center on screen
