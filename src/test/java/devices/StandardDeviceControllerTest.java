@@ -39,8 +39,6 @@ class StandardDeviceControllerTest {
         when(mockModel.isOn()).thenReturn(true);
         controller = new StandardDeviceController(mockModel, mockView);
         verify(mockView).updateStatusLabel("ON", Color.GREEN);
-        
-        // Constructor calls model.isOn(), acknowledge it before closing verifying
         verify(mockModel, atLeastOnce()).isOn();
         verifyNoMoreInteractions(mockModel);
     }
